@@ -40,11 +40,9 @@ export class ProductController {
             return res.status(200).json(products);
         } catch (error) {
             console.error(error);
-            return res
-                .status(500)
-                .json({
-                    message: 'Kitchen caught fire while fetching the menu',
-                });
+            return res.status(500).json({
+                message: 'Kitchen caught fire while fetching the menu',
+            });
         }
     }
 }

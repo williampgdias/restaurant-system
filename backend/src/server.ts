@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import { productRoutes } from './routes/product.routes';
+import { orderRoutes } from './routes/order.routes';
 
 const app = express();
 const SERVER_PORT = 3333;
@@ -17,6 +18,7 @@ app.get('/status', (req: Request, res: Response) => {
 });
 
 app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
 
 app.listen(SERVER_PORT, () => {
     console.log(`🚀 Server whistling at http://localhost:${SERVER_PORT}`);

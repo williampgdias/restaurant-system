@@ -26,7 +26,7 @@ model Order {
     id          String      @id @default(uuid())
     tableNumber Int
     status      String      @default("PENDING")
-    createdAt   DateTime
+    createdAt   DateTime    @default(now())
 
     items       OrderItem[]
 
