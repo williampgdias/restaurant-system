@@ -46,4 +46,48 @@ export class OrderController {
             });
         }
     }
+
+    async list(req: Request, res: Response) {
+        try {
+            const orderService = new OrderService();
+            const orders = await orderService.listOrders();
+            return res.status(200).json(orders);
+        } catch (error) {
+            console.error(error);
+            return res
+                .status(500)
+                .json({ message: 'Kitchen display is broken' });
+        }
+    }
+
+    async updateStatus(req: Request, res: Response) {
+        const updateStatusSchema = z.object({
+            status: z.enum(['PENDING', 'PREPARING', 'READY', 'FINISHED']),
+        });
+
+        const paramsSchema = z.object({
+            id: z.string().uuid(),
+        });
+
+        try {
+            const { id } = paramsSchema.parse(req.params);
+            const { status } = updateStatusSchema.parse(req.body);
+
+            const orderService = new OrderService();
+            const order = await orderService.updateStatus(id, status);
+
+            return res.status(200).json(order);
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                return res.status(400).json({
+                    message: 'Invalid status or ticker ID',
+                    errors: error.format(),
+                });
+                console.error(error);
+                return res
+                    .status(500)
+                    .json({ message: 'Could not ring the bell' });
+            }
+        }
+    }
 }

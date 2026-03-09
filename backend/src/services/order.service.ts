@@ -32,4 +32,34 @@ export class OrderService {
 
         return order;
     }
+
+    async listOrders() {
+        const orders = await prisma.order.findMany({
+            orderBy: {
+                createdAt: 'asc',
+            },
+            include: {
+                items: {
+                    include: {
+                        product: true,
+                    },
+                },
+            },
+        });
+
+        return orders;
+    }
+
+    async updateStatus(orderId: string, status: string) {
+        const order = await prisma.order.update({
+            where: {
+                id: orderId,
+            },
+            data: {
+                status: status,
+            },
+        });
+
+        return order;
+    }
 }

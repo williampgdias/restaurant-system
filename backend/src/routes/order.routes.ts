@@ -5,3 +5,7 @@ export const orderRoutes = Router();
 const orderController = new OrderController();
 
 orderRoutes.post('/', orderController.create);
+
+orderRoutes.get('/', orderController.list);
+
+orderRoutes.patch('/:id/status', orderController.updateStatus);
