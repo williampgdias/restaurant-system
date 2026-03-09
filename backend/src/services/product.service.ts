@@ -20,4 +20,14 @@ export class ProductService {
 
         return product;
     }
+
+    async listProducts() {
+        const products = await prisma.product.findMany({
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+
+        return products;
+    }
 }

@@ -31,4 +31,20 @@ export class ProductController {
             return res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    async list(req: Request, res: Response) {
+        try {
+            const productService = new ProductService();
+            const products = await productService.listProducts();
+
+            return res.status(200).json(products);
+        } catch (error) {
+            console.error(error);
+            return res
+                .status(500)
+                .json({
+                    message: 'Kitchen caught fire while fetching the menu',
+                });
+        }
+    }
 }
