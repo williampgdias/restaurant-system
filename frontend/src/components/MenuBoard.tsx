@@ -20,6 +20,7 @@ interface OrderItem {
 
 export function MenuBoard({ products }: { products: Product[] }) {
     const [ticketItems, setTicketItems] = useState<OrderItem[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleAddToTicket = (product: Product) => {
         setTicketItems((prevTicket) => {
@@ -45,6 +46,45 @@ export function MenuBoard({ products }: { products: Product[] }) {
                 },
             ];
         });
+    };
+
+    const handleSendOrder = async () => {
+        setIsSubmitting(true);
+
+        try {
+            const orderPayload = {
+                tableNumber: 5,
+                items: ticketItems.map((item) => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                })),
+            };
+
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/orders`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderPayload),
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Kitchen rejected the ticket');
+            }
+
+            alert('Ding! 🛎️ Your order has been sent to the kitchen!');
+            setTicketItems([]);
+        } catch (error) {
+            console.error('Error placing order:', error);
+            alert(
+                'Oops! The waiter tripped. Please try sending your order again.',
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const totalAmount = ticketItems.reduce(
@@ -138,10 +178,11 @@ export function MenuBoard({ products }: { products: Product[] }) {
                 </div>
 
                 <button
-                    disabled={ticketItems.length === 0}
-                    className="w-full mt-6 bg-green-600 disabled:bg-gray-300 text-white font-bold py-2 rounded-xl hover:bg-green-700 transition-colors"
+                    onClick={handleSendOrder}
+                    disabled={ticketItems.length === 0 || isSubmitting}
+                    className="w-full mt-6 bg-green-600 disabled:bg-gray-300 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-colors flex justify-center items-center"
                 >
-                    Send to Kitchen
+                    {isSubmitting ? 'Sending to Kitchen...' : 'Send to Kitchen'}
                 </button>
             </div>
         </div>
