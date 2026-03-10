@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface Product {
     id: string;
     name: string;
@@ -44,12 +46,14 @@ export default async function MenuPage() {
                         className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                     >
                         {/* Food Image Placeholder */}
-                        <div className="h-48 bg-gray-200 flex items-center justify-center">
+                        <div className="h-48 bg-gray-200 flex items-center justify-center relative w-full">
                             {product.imageUrl ? (
-                                <img
+                                <Image
                                     src={product.imageUrl}
                                     alt={product.name}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                             ) : (
                                 <span className="text-gray-400 text-sm">
