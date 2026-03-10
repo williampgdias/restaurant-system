@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 interface Product {
     id: string;
@@ -75,13 +76,15 @@ export function MenuBoard({ products }: { products: Product[] }) {
                 throw new Error('Kitchen rejected the ticket');
             }
 
-            alert('Ding! 🛎️ Your order has been sent to the kitchen!');
+            toast.success('Order sent to the kitchen!', {
+                description: 'The chef is already preparing your dish.',
+            });
             setTicketItems([]);
         } catch (error) {
             console.error('Error placing order:', error);
-            alert(
-                'Oops! The waiter tripped. Please try sending your order again.',
-            );
+            toast.error('Oops! The waiter tripped.', {
+                description: 'Please try sending your order again.',
+            });
         } finally {
             setIsSubmitting(false);
         }
